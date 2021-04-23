@@ -1,22 +1,27 @@
 package main
 
 import (
-	"github.com/pygosuperman/pgcr_go_chitchat/route"
 	"net/http"
 	"time"
+
+	"github.com/pygosuperman/pgcr_go_chitchat/route"
 )
 
 func main() {
-	route.P("ChitChat", route.Version(), "started at", route.Config.Address)
+	// 打印一句话，表示程序开始运行
+	route.P("pgcr_go_chitchat", route.Version(), "开始运行，地址是：", route.Config.Address)
 
-	// handle static assets
+	// 这是一个多路复用器，作为所有请求的入口
+	// 每个请求都会被传递到这里
 	mux := http.NewServeMux()
+	// 静态资源目录，通过配置文件可以进行配置
 	files := http.FileServer(http.Dir(route.Config.Static))
+	// 静态资源的路径
 	mux.Handle("/static/", http.StripPrefix("/static/", files))
 
 	//
-	// all route patterns matched here
-	// route handler functions defined in other files
+	// 所有的路由都在这里匹配
+	// 具体的路由函数定义在其他的文件中
 	//
 
 	// index
@@ -39,7 +44,8 @@ func main() {
 
 	// starting up the server
 	server := &http.Server{
-		Addr:           route.Config.Address,
+		Addr: route.Config.Address,
+		// 指定处理器为一个多路复用器对象
 		Handler:        mux,
 		ReadTimeout:    time.Duration(route.Config.ReadTimeout * int64(time.Second)),
 		WriteTimeout:   time.Duration(route.Config.WriteTimeout * int64(time.Second)),

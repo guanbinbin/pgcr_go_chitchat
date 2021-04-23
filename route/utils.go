@@ -24,6 +24,7 @@ var Config Configuration
 var logger *log.Logger
 
 // Convenience function for printing to stdout
+// 标准输出的便捷函数
 func P(a ...interface{}) {
 	fmt.Println(a)
 }
@@ -56,26 +57,31 @@ func error_message(writer http.ResponseWriter, request *http.Request, msg string
 	http.Redirect(writer, request, strings.Join(url, ""), 302)
 }
 
-// Checks if the user is logged in and has a session, if not Err is not nil
+// 检查用户是否已经登录
 func session(writer http.ResponseWriter, request *http.Request) (sess data.Session, err error) {
+	// 获取cookie数据
 	cookie, err := request.Cookie("_cookie")
 	if err == nil {
+		// 创建一个session对象
 		sess = data.Session{Uuid: cookie.Value}
+		// 检查session是否存在
 		if ok, _ := sess.Check(); !ok {
-			err = errors.New("Invalid session")
+			// 不存在，报错
+			err = errors.New("session不存在，用户未登录") //文字内容不应该以大写字母开头或者标点符号结尾。
 		}
 	}
 	return
 }
 
-// parse HTML templates
-// pass in a list of file names, and get a template
+// 解析HTML模板
+// 通过文件名称的列表，得到一个模板对象
 func parseTemplateFiles(filenames ...string) (t *template.Template) {
 	var files []string
 	t = template.New("layout")
 	for _, file := range filenames {
 		files = append(files, fmt.Sprintf("templates/%s.html", file))
 	}
+	// template.Must：用于捕捉语法分析过程中可能会产生的错误
 	t = template.Must(t.ParseFiles(files...))
 	return
 }

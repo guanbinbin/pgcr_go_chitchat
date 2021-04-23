@@ -22,15 +22,21 @@ type Session struct {
 }
 
 // Create a new session for an existing user
+// 为已存在的用户创建一个新的session对象
 func (user *User) CreateSession() (session Session, err error) {
+	// 创建sql语句
 	statement := "insert into sessions (uuid, email, user_id, created_at) values ($1, $2, $3, $4) returning id, uuid, email, user_id, created_at"
+	// 执行sql语句
 	stmt, err := Db.Prepare(statement)
 	if err != nil {
 		return
 	}
+	// 关闭处理器对象
 	defer stmt.Close()
 	// use QueryRow to return a row and scan the returned id into the Session struct
+	// 取出查询到的数据，并存入到session中
 	err = stmt.QueryRow(createUUID(), user.Email, user.Id, time.Now()).Scan(&session.Id, &session.Uuid, &session.Email, &session.UserId, &session.CreatedAt)
+	// 相当于 return session, err
 	return
 }
 
@@ -42,14 +48,17 @@ func (user *User) Session() (session Session, err error) {
 	return
 }
 
-// Check if session is valid in the database
+// 检查数据库中的会话唯一ID是否存在
 func (session *Session) Check() (valid bool, err error) {
+	// 查询并赋值
 	err = Db.QueryRow("SELECT id, uuid, email, user_id, created_at FROM sessions WHERE uuid = $1", session.Uuid).
 		Scan(&session.Id, &session.Uuid, &session.Email, &session.UserId, &session.CreatedAt)
+	// 不存在，返回false和err
 	if err != nil {
 		valid = false
 		return
 	}
+	// 存在，返回true和nil
 	if session.Id != 0 {
 		valid = true
 	}
