@@ -1,20 +1,17 @@
 {{ define "content" }}
-<p class="lead">
-  <a href="/thread/new">Start a thread</a> or join one below!
-</p>
+<p class="lead"><a href="/thread/new">创建话题</a> 或者马上参与一个话题！</p>
 
 {{ range . }}
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <span class="lead"> <i class="fa fa-comment-o"></i> {{ .Topic }}</span>
-    </div>
-    <div class="panel-body">
-      Started by {{ .User.Name }} - {{ .CreatedAtDate }} - {{ .NumReplies }} posts.
-      <div class="pull-right">
-        <a href="/thread/read?id={{.Uuid }}">Read more</a>
-      </div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <span class="lead"> <i class="fa fa-comment-o"></i> {{ .Topic }}</span>
+  </div>
+  <div class="panel-body">
+    作者： {{ .User.Name }} 创建时间： {{ .CreatedAtDate }} 回复数量： {{
+    .NumReplies }}
+    <div class="pull-right">
+      <a href="/thread/read?id={{.Uuid }}">查看更多</a>
     </div>
   </div>
-{{ end }}
-
-{{ end }}
+</div>
+{{ end }} {{ end }}

@@ -7,33 +7,40 @@ import (
 )
 
 // GET /login
-// Show the Login page
+// 登录页面
 func Login(writer http.ResponseWriter, request *http.Request) {
+	// 解析模板文件
 	t := parseTemplateFiles("login.layout", "public.navbar", "login")
+	// 执行
 	t.Execute(writer, nil)
 }
 
 // GET /signup
-// Show the Signup page
+// 退出登录
 func Signup(writer http.ResponseWriter, request *http.Request) {
+	// 生成html页面
 	generateHTML(writer, nil, "login.layout", "public.navbar", "signup")
 }
 
 // POST /signup
-// Create the user account
+// 创建用户账号
 func SignupAccount(writer http.ResponseWriter, request *http.Request) {
+	// 解析表单数据
 	err := request.ParseForm()
 	if err != nil {
-		danger(err, "Cannot parse form")
+		danger(err, "无法解析表单")
 	}
+	// 创建User对象
 	user := data.User{
 		Name:     request.PostFormValue("name"),
 		Email:    request.PostFormValue("email"),
 		Password: request.PostFormValue("password"),
 	}
+	// 调用创建方法创建用户
 	if err := user.Create(); err != nil {
-		danger(err, "Cannot create user")
+		danger(err, "无法创建用户")
 	}
+	// 重定向到登录页面
 	http.Redirect(writer, request, "/login", http.StatusFound)
 }
 

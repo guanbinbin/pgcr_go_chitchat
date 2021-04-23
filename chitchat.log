@@ -8,3 +8,4 @@ ERROR 2021/04/23 06:52:46 utils.go:100: dial tcp 127.0.0.1:5432: connect: connec
 ERROR 2021/04/23 07:06:50 utils.go:100: pq: database "chitchat" does not exist Cannot create user
 ERROR 2021/04/23 07:09:34 utils.go:100: pq: relation "users" does not exist Cannot create user
 WARNING 2021/04/23 07:30:57 utils.go:106: <nil> Failed to get cookie
+WARNING 2021/04/23 20:57:34 utils.go:112: <nil> Failed to get cookie

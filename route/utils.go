@@ -86,13 +86,16 @@ func parseTemplateFiles(filenames ...string) (t *template.Template) {
 	return
 }
 
+// 生成HTML的函数
 func generateHTML(writer http.ResponseWriter, data interface{}, filenames ...string) {
 	var files []string
+	// 追加文件列表
 	for _, file := range filenames {
 		files = append(files, fmt.Sprintf("templates/%s.html", file))
 	}
-
+	// 编译模板
 	templates := template.Must(template.ParseFiles(files...))
+	// 执行模板，传递数据
 	templates.ExecuteTemplate(writer, "layout", data)
 }
 
